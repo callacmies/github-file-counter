@@ -1,3 +1,4 @@
+tar -czf ~/rpmbuild/SOURCES/file_counter.tar.gz -C script count_files.sh
 name: Build RPM and DEB
 
 on:
