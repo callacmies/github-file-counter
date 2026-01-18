@@ -1,0 +1,34 @@
+name: Build RPM and DEB
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y rpm dpkg-dev
+
+      # ---------- RPM ----------
+      - name: Prepare RPM build tree
+        run: |
+          mkdir -p ~/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
+          tar -czf ~/rpmbuild/SOURCES/file-counter.tar.gz script/count_files.sh
+          cp rpm/file_counter.spec ~/rpmbuild/SPECS/
+
+      - name: Build RPM
+        run: |
+          rpmbuild -ba ~/rpmbuild/SPECS/file_counter.spec
+
+      # ---------- DEB ----------
+      - name: Build DEB
+        run: |
+          dpkg-deb --build deb
