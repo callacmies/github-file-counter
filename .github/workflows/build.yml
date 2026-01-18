@@ -35,4 +35,21 @@ jobs:
       # ---------- DEB ----------
       - name: Build DEB
         run: |
+          mkdir -p deb/DEBIAN
+          mkdir -p deb/usr/local/bin
+
+          cp script/count_files.sh deb/usr/local/bin/count_files.sh
+          chmod 755 deb/usr/local/bin/count_files.sh
+
+          cat > deb/DEBIAN/control <<EOF
+          Package: file-counter
+          Version: 1.0
+          Section: utils
+          Priority: optional
+          Architecture: all
+          Maintainer: callacmies <callacmies@gmail.com>
+          Description: Count regular files in /etc directory
+          EOF
+
           dpkg-deb --build deb
+
