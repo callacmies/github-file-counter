@@ -21,8 +21,11 @@ jobs:
       - name: Prepare RPM build tree
         run: |
           mkdir -p ~/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
-          tar -czf ~/rpmbuild/SOURCES/file_counter.tar.gz script/count_files.sh
+          tar -czf ~/rpmbuild/SOURCES/file_counter.tar.gz \
+              --transform 's|^script/||' \
+              script/count_files.sh
           cp rpm/file_counter.spec ~/rpmbuild/SPECS/
+
  
 
       - name: Build RPM
