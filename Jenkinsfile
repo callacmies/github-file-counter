@@ -56,7 +56,7 @@ pipeline {
             echo 'Pipeline failed'
         }
 
-stage('Build DEB') {
+	stage('Build DEB') {
     agent {
         docker {
             image 'ubuntu:22.04'
