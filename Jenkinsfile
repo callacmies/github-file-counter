@@ -55,6 +55,33 @@ pipeline {
         failure {
             echo 'Pipeline failed'
         }
+
+stage('Build DEB') {
+    agent {
+        docker {
+            image 'ubuntu:22.04'
+            args '-u root'
+        }
+    }
+    steps {
+        sh '''
+            apt-get update
+            apt-get install -y dpkg-dev
+
+            mkdir -p build/file-counter/usr/local/bin
+            mkdir -p build/file-counter/DEBIAN
+
+            cp script/count_files.sh build/file-counter/usr/local/bin/file-counter
+            chmod 755 build/file-counter/usr/local/bin/file-counter
+            cp deb/DEBIAN/control build/file-counter/DEBIAN/control
+
+            dpkg-deb --build build/file-counter
+            cp build/file-counter.deb ${WORKSPACE}/
+        '''
+    }
+}
+
+
     }
 }
 
